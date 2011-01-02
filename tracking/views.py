@@ -6,9 +6,12 @@ from django.conf import settings
 from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Context, loader
+from django.utils.translation import ugettext_lazy as _
 from django.utils.simplejson import JSONEncoder
-from django.utils.translation import ungettext
+from django.utils.translation import ungettext_lazy, ugettext_lazy as _
 from django.views.decorators.cache import never_cache
+import pyofc2
+
 from tracking.models import Visitor
 from tracking.utils import u_clean as uc
 
@@ -110,3 +113,38 @@ def display_map(request, template_name=DEFAULT_TRACKING_TEMPLATE,
                               {'GOOGLE_MAPS_KEY': GOOGLE_MAPS_KEY,
                                'template': extends_template},
                               context_instance=RequestContext(request))
+
+###
+# ANALYTICS
+###
+def analytics_home(request):
+    """Presents the user with some options for viewing analytics information"""
+
+    """
+    graph breaking down daily/weekly/monthly visits.
+    visits over time in a day
+    average peak times
+    top referrers graph (top X number of referrers)
+    download tracking
+    """
+
+    context = RequestContext(request, {
+    })
+
+    return render_to_response('admin/tracking/analytics_home.html', context)
+
+def _page_views(request):
+    """Returns information about page views"""
+
+    chart = pyofc2.open_flash_chart()
+    chart.title = pyofc2.title(text=_('Page Views'))
+
+    return HttpResponse(content=chart.render(), mimetype='text/json')
+
+def _page_visitors(request):
+    """Returns information about visitors"""
+
+    chart = pyofc2.open_flash_chart()
+    chart.title = pyofc2.title(text=_('Visitors'))
+
+    return HttpResponse(content=chart.render(), mimetype='text/json')
