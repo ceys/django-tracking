@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-import sys, os
 import tracking
+
+requires = ['django>=1.1.0', 'pyofc2']
 
 setup(
     name='django-tracking',
@@ -16,6 +17,7 @@ setup(
     url='http://bitbucket.org/codekoala/django-tracking',
     license='MIT',
     package_dir={'tracking': 'tracking'},
+    install_requires=requires,
     include_package_data=True,
     packages=find_packages(),
     classifiers=[

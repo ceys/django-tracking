@@ -1,0 +1,34 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Analytics Home" %}{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL }}swf/swfobject.js"></script>
+<script type="text/javascript">
+swfobject.embedSWF(
+    "{{ MEDIA_URL }}swf/open-flash-chart.swf", "views_chart",
+    "820", "400", "9.0.0", "/static/expressInstall.swf",
+    {"data-file":"{% url tracking-analytics-views %}"}
+);
+
+swfobject.embedSWF(
+    "{{ MEDIA_URL }}swf/open-flash-chart.swf", "visitors_chart",
+    "820", "400", "9.0.0", "{{ MEDIA_URL }}swf/expressInstall.swf",
+    {"data-file":"{% url tracking-analytics-visitors %}"}
+);
+</script>
+{% endblock %}
+
+{% block content %}
+<table id="django-tracking-analytics">
+    <tr>
+        <th>{% trans "Page Views" %}</th>
+        <th>{% trans "Visitors" %}</th>
+    </tr>
+    <tr>
+        <td class="chart" id="views_chart">{{ views_chart.render }}</td>
+        <td class="chart" id="visitors_chart">{{ visitors_chart.render }}</td>
+    </tr>
+</table>
+{% endblock %}
